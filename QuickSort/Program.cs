@@ -49,19 +49,31 @@ namespace QuickSort
 
         static void HoareSort<T>(T[] items) where T : IComparable<T>
         {
-            HoareSort(items, 1, -1, items.Length);
+            HoareSort(items, 0, items.Length - 1);
         }
-        static void HoareSort<T>(T[] items, int pivot, int left, int right) where T : IComparable<T>
+        static void HoareSort<T>(T[] items, int left, int right) where T : IComparable<T>
         {
+            T pivot = items[0];
 
+            while(items[left].CompareTo(pivot) < 0)
+            {
+                left++;
+            } 
+
+            while (items[right].CompareTo(pivot) > 0)
+            {
+                right--;
+            }
+            Swap(ref items[left], ref items[right]);
+            HoareSort(items, left, right);
         }
-
+        //cant test wont let me startup project???
 
         static void Main(string[] args)
         {
             int[] items = new int[] {7, 4, 3, 6, 2, 1, 5};
 
-            LomutoSort(items);
+            HoareSort(items);
 
             for (int i = 0; i < items.Length; i++)
             {
