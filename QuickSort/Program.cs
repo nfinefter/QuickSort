@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace QuickSort
 {
@@ -51,29 +52,59 @@ namespace QuickSort
         {
             HoareSort(items, 0, items.Length - 1);
         }
+
         static void HoareSort<T>(T[] items, int left, int right) where T : IComparable<T>
         {
-            T pivot = items[0];
+            if (left == right) return;
 
-            while(items[left].CompareTo(pivot) < 0)
-            {
-                left++;
-            } 
+            HoarePartition(items, left, right);
 
-            while (items[right].CompareTo(pivot) > 0)
-            {
-                right--;
-            }
-            Swap(ref items[left], ref items[right]);
-            HoareSort(items, left, right);
+            HoareSort(items, 0, left);
+            HoareSort(items, left + 1, right);
+            //fix these, needs more work.
         }
-        //cant test wont let me startup project???
+
+        static int HoarePartition<T>(T[] items, int left, int right) where T : IComparable<T>
+        {
+            int pivot = left;
+
+            while (true)
+            {
+                do
+                {
+                    left++;
+                } while (items[left].CompareTo(items[pivot]) < 0);
+
+                do
+                {
+                    right--;
+                } while (items[right].CompareTo(items[pivot]) > 0);
+
+                if (left <= right)
+                {
+                    break;
+                }
+
+                Swap(ref items[left], ref items[right]);
+            }
+
+            return left;
+        }
+
+
 
         static void Main(string[] args)
         {
-            int[] items = new int[] {7, 4, 3, 6, 2, 1, 5};
+            //int[] items = new int[] {7, 4, 3, 6, 2, 1, 5};
+            Random random = new Random();
+            int[] items = Enumerable.Repeat(0, 20).Select(n => random.Next(1, 1000)).ToArray();
 
+            int[] original = items.ToArray();
+
+            //LomutoSort(items);
             HoareSort(items);
+
+            bool isSorted = items.SequenceEqual(original.OrderBy(n => n));
 
             for (int i = 0; i < items.Length; i++)
             {
