@@ -3,8 +3,6 @@ using System.Linq;
 
 namespace QuickSort
 {
-
-
     class Program
     { 
         static void LomutoSort<T>(T[] items) where T : IComparable<T>
@@ -55,18 +53,20 @@ namespace QuickSort
 
         static void HoareSort<T>(T[] items, int left, int right) where T : IComparable<T>
         {
-            if (left == right) return;
+            if (left >= right) return;
 
-            HoarePartition(items, left, right);
+            int mid = HoarePartition(items, left, right);
 
-            HoareSort(items, 0, left);
-            HoareSort(items, left + 1, right);
-            //fix these, needs more work.
+            HoareSort(items, left, mid);
+            HoareSort(items, mid + 1, right);
         }
 
         static int HoarePartition<T>(T[] items, int left, int right) where T : IComparable<T>
         {
             int pivot = left;
+
+            left--;
+            right++;
 
             while (true)
             {
@@ -80,7 +80,7 @@ namespace QuickSort
                     right--;
                 } while (items[right].CompareTo(items[pivot]) > 0);
 
-                if (left <= right)
+                if (left >= right)
                 {
                     break;
                 }
@@ -88,7 +88,7 @@ namespace QuickSort
                 Swap(ref items[left], ref items[right]);
             }
 
-            return left;
+            return right;
         }
 
 
